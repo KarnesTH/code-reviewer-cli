@@ -1,7 +1,8 @@
 import json
-from tqdm import tqdm
 
 from ollama import Client
+from tqdm import tqdm
+
 
 class OllamaService:
     def __init__(self, model: str, host: str, language: str):
@@ -44,17 +45,19 @@ class OllamaService:
             f"{self.language}\n\n"
             "Return your answer strictly in JSON with the following structure:\n"
             "{\n"
-            "  \"summary\": \"...\",\n"
-            "  \"security_issues\": [\"...\"],\n"
-            "  \"performance_issues\": [\"...\"],\n"
-            "  \"style_issues\": [\"...\"],\n"
-            "  \"suggestions\": [\"...\"]\n"
+            '  "summary": "...",\n'
+            '  "security_issues": ["..."],\n'
+            '  "performance_issues": ["..."],\n'
+            '  "style_issues": ["..."],\n'
+            '  "suggestions": ["..."]\n'
             "}\n"
             "Code:\n"
             f"{code}\n"
         )
 
-        response = self.client.generate(model=self.model, prompt=prompt, format="json", stream=True, options=options)
+        response = self.client.generate(
+            model=self.model, prompt=prompt, format="json", stream=True, options=options
+        )
 
         pb = tqdm(total=None, desc="Reviewing code", unit=" chunks")
 

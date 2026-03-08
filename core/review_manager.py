@@ -1,6 +1,36 @@
 import pathlib
 from typing import Any, Generator
 
+EXTENSION_MAP = {
+    ".py": "python",
+    ".js": "javascript",
+    ".ts": "typescript",
+    ".java": "java",
+    ".cpp": "cpp",
+    ".cs": "csharp",
+    ".php": "php",
+    ".rb": "ruby",
+    ".go": "go",
+    ".swift": "swift",
+    ".kt": "kotlin",
+    ".scala": "scala",
+    ".r": "r",
+    ".lua": "lua",
+    ".sql": "sql",
+    ".pl": "perl",
+    ".html": "html",
+    ".css": "css",
+    ".xml": "xml",
+    ".yaml": "yaml",
+    ".json": "json",
+    ".sh": "shell",
+    ".bat": "batch",
+    ".ps1": "powershell",
+    ".md": "markdown",
+    ".txt": "text",
+    ".csv": "csv",
+    ".rs": "rust"
+}
 
 
 class ReviewManager:
@@ -68,7 +98,7 @@ class ReviewManager:
             file.write(result)
 
     @staticmethod
-    def parse_filename(path: str) -> str:
+    def parse_filename(path: str) -> tuple[str, str]:
         """
         Extract the filename from a given file path.
 
@@ -78,4 +108,15 @@ class ReviewManager:
         Returns:
         str: The filename without the extension.
         """
-        return pathlib.Path(path).stem
+        if not pathlib.Path(path).exists():
+            raise FileNotFoundError(f"The file {path} does not exist.")
+
+        filename = pathlib.Path(path).stem
+
+        ext = pathlib.Path(path).suffix
+        language = EXTENSION_MAP.get(ext, "Unknown")
+
+        if language == "Unknown":
+            raise ValueError(f"Unsupported file extension: {ext}")
+
+        return filename, language

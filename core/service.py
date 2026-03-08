@@ -1,4 +1,5 @@
 import json
+from tqdm import tqdm
 
 from ollama import Client
 
@@ -53,6 +54,17 @@ class OllamaService:
             f"{code}\n"
         )
 
-        response = self.client.generate(model=self.model, prompt=prompt, format="json", options=options)
-        result = json.loads(response.response)
+        response = self.client.generate(model=self.model, prompt=prompt, format="json", stream=True, options=options)
+
+        pb = tqdm(total=None, desc="Reviewing code", unit=" chunks")
+
+        full_text = ""
+        for chunk in response:
+            full_text += chunk.response
+            pb.update(1)
+            if chunk.done:
+                break
+        pb.close()
+
+        result = json.loads(full_text)
         return result

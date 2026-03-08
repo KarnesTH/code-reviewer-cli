@@ -1,7 +1,7 @@
 [project]
 name = "code-reviewer-cli"
 version = "0.1.0"
-description = "Add your description here"
+description = "Local AI-Driven CLI tool to generate code reviews."
 requires-python = ">=3.14"
 dependencies = [
     "ollama>=0.6.1",

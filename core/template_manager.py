@@ -43,18 +43,18 @@ class TemplateManager:
         """
         if not template.exists():
             raise FileNotFoundError(f"Template {template} not found.")
-        
+
         with open(template, "r", encoding="utf-8") as file:
             content = file.read()
 
         for key, value in values.items():
-            if type(value) == list:
+            if isinstance(value, list):
                 items = ""
-                for item in value:
-                    if len(value) > 0:
+                if len(value) == 0:
+                    items = "No issues found."
+                else:
+                    for item in value:
                         items += f"- {item}\n"
-                    else:
-                        items += "No issues found."
 
                 content = content.replace("{{ " + key + " }}", items)
             else:

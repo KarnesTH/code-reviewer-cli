@@ -32,12 +32,24 @@ class OllamaService:
         Returns:
         dict: The analysis result containing security issues, style issues, etc.
         """
+        context_prompt = (
+            "Analyze the following code and identify:\n"
+            "1. The purpose and type of this application\n"
+            "2. Intentional design decisions and WHY they were made\n"
+            "3. UX-relevant elements and their intent\n\n"
+            f"Code:\n{code}"
+        )
+        context = self.client.generate(model=self.model, prompt=context_prompt)
+
+        print(context.response)
+
         options = {"temperature": 0.0}
         tm = TemplateManager("templates")
         rules_template = tm.get_template("RULES.md")
         rules = tm.parse_template(rules_template, {
             "programming_language": self.programming_language,
-            "output_language": self.language
+            "output_language": self.language,
+            "context": context
         })
         prompt = (
             f"{rules}\n\n"

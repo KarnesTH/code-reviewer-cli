@@ -3,9 +3,11 @@ import json
 from ollama import Client
 from tqdm import tqdm
 
+from core.template_manager import TemplateManager
+
 
 class OllamaService:
-    def __init__(self, model: str, host: str, language: str):
+    def __init__(self, model: str, host: str, language: str, programming_language: str):
         """
         Initialize the OllamaService with the specified model, host, and language.
 
@@ -13,10 +15,12 @@ class OllamaService:
         model (str): The Ollama model to be used for analysis.
         host (str): The host URL for the Ollama service.
         language (str): The programming language of the code to be analyzed.
+        programming_language (str): The specific programming language for code analysis.
         """
         self.client = Client(host)
         self.model = model
         self.language = language
+        self.programming_language = programming_language
 
     def analyze_code(self, code: str) -> dict:
         """
@@ -29,28 +33,14 @@ class OllamaService:
         dict: The analysis result containing security issues, style issues, etc.
         """
         options = {"temperature": 0.0}
+        tm = TemplateManager("templates")
+        rules_template = tm.get_template("RULES.md")
+        rules = tm.parse_template(rules_template, {
+            "programming_language": self.programming_language,
+            "output_language": self.language
+        })
         prompt = (
-            "You are a senior software engineer performing a professional code review.\n"
-            "Analyze the following code and provide a detailed review.\n"
-            "IMPORTANT:\n"
-            "1. LANGUAGE: Identify the language and use its specific idiomatic best practices.\n"
-            "2. NO TRIVIA: Do not report issues in commented-out code. Do not report hardcoded 'localhost' as a security risk.\n"
-            "3. IGNORE DEAD CODE: Do not comment on commented-out code or unused imports unless they are a security risk.\n"
-            "4. HONESTY: If a category has no significant issues, return an empty list [].\n"
-            "5. CLEAN CODE: Apply Clean Code principles. A method that does one thing well is not a style issue.\n"
-            "Generator expressions consumed exactly once are idiomatic Python, not a style issue.\n"
-            "Only report style issues that genuinely reduce readability or maintainability.\n\n"
-            "Return your answer in the given language.\n"
-            "language:\n"
-            f"{self.language}\n\n"
-            "Return your answer strictly in JSON with the following structure:\n"
-            "{\n"
-            '  "summary": "...",\n'
-            '  "security_issues": ["..."],\n'
-            '  "performance_issues": ["..."],\n'
-            '  "style_issues": ["..."],\n'
-            '  "suggestions": ["..."]\n'
-            "}\n"
+            f"{rules}\n\n"
             "Code:\n"
             f"{code}\n"
         )

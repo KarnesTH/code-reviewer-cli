@@ -11,7 +11,7 @@ class CLI(ArgumentParser):
             "--model",
             help="Model to use for analysis",
             type=str,
-            default="qwen2.5-coder",
+            default="qwen3-coder",
         )
         self.add_argument(
             "--host",

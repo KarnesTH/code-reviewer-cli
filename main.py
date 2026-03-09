@@ -1,24 +1,31 @@
+import logging
+
 from core.cli import CLI
 from core.review_manager import ReviewManager
 from core.service import OllamaService
+
+logger = logging.getLogger(__name__)
 
 
 def main():
     """The main function for running the code review tool."""
 
+    # Set up logging
+    logging.basicConfig(filename='code-reviewer.log', level=logging.INFO)
+
     # Parse command-line arguments
     cli = CLI()
     args = cli.parse_args()
 
-    # Initialize the OllamaService
-    service = OllamaService(args.model, args.host, args.lang)
-
     # Initialize the ReviewManager
     rm = ReviewManager()
     # Extract filename and programming language from the file path
-    # TODO: add _programming_language to the model prompt. (For better code understanding. I hope so. =))
-    (filename, _programming_language) = rm.parse_filename(args.path)
-    print("Starting review...")
+    (filename, programming_language) = rm.parse_filename(args.path)
+
+    # Initialize the OllamaService
+    service = OllamaService(args.model, args.host, args.lang, programming_language)
+
+    logger.info(f"Starting review for {filename} with {args.model} model...")
 
     # Get the code from the file
     code = rm.get_code_from_file(args.path)
@@ -30,7 +37,7 @@ def main():
     review_result = rm.parse_review_result(result)
     rm.write_review_result(review_result, f"{filename}_{args.model}_review.md")
 
-    print("Review completed successfully.")
+    logger.info("Review completed successfully.")
 
 
 if __name__ == "__main__":

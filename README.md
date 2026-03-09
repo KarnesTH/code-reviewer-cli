@@ -18,7 +18,7 @@ detailed Markdown review report – without sending your code to any external se
 
 - Python 3.10+
 - [Ollama](https://ollama.com) running locally
-- A supported Ollama model (e.g. `qwen2.5-coder`)
+- A supported Ollama model (e.g. `qwen3-coder`)
 
 ### Python Dependencies
 
@@ -39,7 +39,7 @@ python main.py  [--model MODEL] [--host HOST] [--lang LANGUAGE]
 | Argument  | Description                    | Default                  |
 |-----------|--------------------------------|--------------------------|
 | `path`    | Path to the file to review     | *(required)*             |
-| `--model` | Ollama model to use            | `qwen2.5-coder`          |
+| `--model` | Ollama model to use            | `qwen3-coder`            |
 | `--host`  | Ollama API host                | `http://localhost:11434` |
 | `--lang`  | Language for the review report | `german`                 |
 

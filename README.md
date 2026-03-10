@@ -23,7 +23,7 @@ detailed Markdown review report – without sending your code to any external se
 ### Python Dependencies
 
 ```bash
-pip install ollama tqdm
+pip install ollama rich
 ```
 
 ---

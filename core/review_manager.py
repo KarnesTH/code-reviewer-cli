@@ -1,5 +1,6 @@
 import pathlib
-from typing import Any, Generator
+
+from core.template_manager import TemplateManager
 
 EXTENSION_MAP = {
     ".py": "python",
@@ -54,19 +55,6 @@ class ReviewManager:
                 return file.read()
 
     @classmethod
-    def _extract_list(cls, txt_list: list) -> Generator[str, Any, None]:
-        """
-        Extract list items with bullet points.
-
-        Parameters:
-        txt_list (list): List of text items to format.
-
-        Returns:
-        Generator[str, Any, None]: Generator yielding formatted list items.
-        """
-        return (f"- {txt}" for txt in txt_list)
-
-    @classmethod
     def parse_review_result(cls, result: dict) -> str:
         """
         Parse the review result dictionary and generate a formatted review report.
@@ -77,13 +65,10 @@ class ReviewManager:
         Returns:
         str: The formatted review report.
         """
-        return (
-            f"# Summary\n{result['summary']}\n\n"
-            f"## Security Issues\n{'\n'.join(cls._extract_list(result['security_issues']))}\n\n"
-            f"## Performance Issues\n{'\n'.join(cls._extract_list(result['performance_issues']))}\n\n"
-            f"## Style Issues\n{'\n'.join(cls._extract_list(result['style_issues']))}\n\n"
-            f"## Suggestions\n{'\n'.join(cls._extract_list(result['suggestions']))}"
-        )
+        tm = TemplateManager("templates")
+        reviews_template = tm.get_template("REVIEWS.md")
+
+        return tm.parse_template(reviews_template, result)
 
     @staticmethod
     def write_review_result(result: str, path: str) -> None:

@@ -1,7 +1,7 @@
 import json
 
 from ollama import Client
-from tqdm import tqdm
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from core.template_manager import TemplateManager
 
@@ -39,9 +39,18 @@ class OllamaService:
             "3. UX-relevant elements and their intent\n\n"
             f"Code:\n{code}"
         )
-        context = self.client.generate(model=self.model, prompt=context_prompt)
-
-        print(context.response)
+        context_stream = self.client.generate(model=self.model, prompt=context_prompt, stream=True)
+        context = ""
+        with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                transient=True,
+        ) as progress:
+            progress.add_task(description="Understand Context...", total=None)
+            for chunk in context_stream:
+                context += chunk.response
+                if chunk.done:
+                    break
 
         options = {"temperature": 0.0}
         tm = TemplateManager("templates")
@@ -61,15 +70,17 @@ class OllamaService:
             model=self.model, prompt=prompt, format="json", stream=True, options=options
         )
 
-        pb = tqdm(total=None, desc="Reviewing code", unit=" chunks")
-
         full_text = ""
-        for chunk in response:
-            full_text += chunk.response
-            pb.update(1)
-            if chunk.done:
-                break
-        pb.close()
+        with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                transient=True,
+        ) as progress:
+            progress.add_task(description="Analyze File...", total=None)
+            for chunk in response:
+                full_text += chunk.response
+                if chunk.done:
+                    break
 
         result = json.loads(full_text)
         return result

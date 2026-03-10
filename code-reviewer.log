@@ -28,3 +28,15 @@ INFO:__main__:Starting review for main with qwen3-coder model...
 INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
 INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
 INFO:__main__:Review completed successfully.
+INFO:__main__:Starting review for main with qwen3-coder model...
+INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
+INFO:__main__:Review completed successfully.
+INFO:__main__:Starting review for main with qwen3-coder model...
+INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
+INFO:__main__:Review completed successfully.
+INFO:__main__:Starting review for main with qwen3-coder model...
+INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://192.168.2.36:11434/api/generate "HTTP/1.1 200 OK"
+INFO:__main__:Review completed successfully.
